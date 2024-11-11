@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_7c9ac2c7370144b17bae543802603552 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-locatecontrol/0.66.2/L.Control.Locate.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-locatecontrol/0.66.2/L.Control.Locate.min.css"/>
+</head>
+<body>
+    
+    
+            <style>
+                .parking-popup {
+                    font-family: Arial, sans-serif;
+                    font-size: 12px;
+                    max-width: 200px;
+                }
+                .parking-popup h4 {
+                    margin: 0 0 5px 0;
+                    color: #333;
+                }
+                .parking-status {
+                    font-weight: bold;
+                    margin-top: 5px;
+                }
+            </style>
+        
+    
+        <div style="position: fixed; bottom: 50px; right: 50px; width: 150px;
+                    background-color: white; padding: 10px; border-radius: 5px;
+                    z-index: 1000; box-shadow: 0 0 10px rgba(0,0,0,0.2);">
+            <h4 style="margin: 0 0 10px 0;">Parking Status</h4>
+            <div style="margin-bottom: 5px;">
+                <span style="display: inline-block; height: 12px; width: 12px;
+                           background-color: green; border-radius: 50%;"></span>
+                <span style="margin-left: 5px;">Available</span>
+            </div>
+            <div style="margin-bottom: 5px;">
+                <span style="display: inline-block; height: 12px; width: 12px;
+                           background-color: yellow; border-radius: 50%;"></span>
+                <span style="margin-left: 5px;">Moderate</span>
+            </div>
+            <div style="margin-bottom: 5px;">
+                <span style="display: inline-block; height: 12px; width: 12px;
+                           background-color: orange; border-radius: 50%;"></span>
+                <span style="margin-left: 5px;">Nearly Full</span>
+            </div>
+            <div>
+                <span style="display: inline-block; height: 12px; width: 12px;
+                           background-color: red; border-radius: 50%;"></span>
+                <span style="margin-left: 5px;">Full</span>
+            </div>
+            <div style="margin-top: 10px;">
+                <span style="display: inline-block; height: 20px; width: 20px;
+                           background-color: blue; border-radius: 50%; border: 3px solid white;
+                           box-shadow: 0 0 3px rgba(0,0,0,0.3);"></span>
+                <span style="margin-left: 5px;">Your Location</span>
+            </div>
+        </div>
+        
+    
+            <div class="folium-map" id="map_7c9ac2c7370144b17bae543802603552" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_7c9ac2c7370144b17bae543802603552 = L.map(
+                "map_7c9ac2c7370144b17bae543802603552",
+                {
+                    center: [42.729869, -73.676871],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 16,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_7da98ee6af69625d73de1c335b611d84 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_7da98ee6af69625d73de1c335b611d84.addTo(map_7c9ac2c7370144b17bae543802603552);
+        
+    
+            var locate_control_c9021e0a4dca096f4877b41b7f8267c5 = L.control.locate(
+                {"flyTo": false, "icon": "fa fa-location-arrow", "locateOptions": {"enableHighAccuracy": true, "watch": true}, "position": "topleft", "strings": {"title": "Show my location"}}
+            ).addTo(map_7c9ac2c7370144b17bae543802603552);
+            
+                locate_control_c9021e0a4dca096f4877b41b7f8267c5.start();
+            
+        
+    
+            var circle_marker_9196bda0fa2492634b5faf4030ddc8a2 = L.circleMarker(
+                [42.7304371, -73.6882107],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(map_7c9ac2c7370144b17bae543802603552);
+        
+    
+        var popup_14969dc4301defd3d2853da793862ada = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_e973111b21a05ccc7c66d438d25bb4b1 = $(`<div id="html_e973111b21a05ccc7c66d438d25bb4b1" style="width: 100.0%; height: 100.0%;">                     <div class="parking-popup">                         <h4>5th Ave Parking Garage</h4>                         <div>Address: 1713 5th Ave, Troy, NY 12180, USA</div>                         <div>Hours: ['Monday: Open 24 hours', 'Tuesday: Open 24 hours', 'Wednesday: Open 24 hours', 'Thursday: Open 24 hours', 'Friday: Open 24 hours', 'Saturday: Open 24 hours', 'Sunday: Open 24 hours']</div>                         <div>Type: public</div>                         <div class="parking-status" style="color: green">                             Status: Available (17.9% full)                         </div>                         <div style="margin-top: 5px;">                             <strong>Factors:</strong>                             <ul style="margin: 5px 0; padding-left: 20px;">                                 <li>Time Impact: 0.2x</li>                                 <li>Weather Impact: 1.2x</li>                                 <li>Event Impact: 1.0x</li>                             </ul>                         </div>                     </div>                 </div>`)[0];
+                popup_14969dc4301defd3d2853da793862ada.setContent(html_e973111b21a05ccc7c66d438d25bb4b1);
+            
+        
+
+        circle_marker_9196bda0fa2492634b5faf4030ddc8a2.bindPopup(popup_14969dc4301defd3d2853da793862ada)
+        ;
+
+        
+    
+    
+            circle_marker_9196bda0fa2492634b5faf4030ddc8a2.bindTooltip(
+                `<div>
+                     5th Ave Parking Garage - Available
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_87824deb842dd5ce7c196e008a687ac0 = L.circleMarker(
+                [42.7300025, -73.6916428],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(map_7c9ac2c7370144b17bae543802603552);
+        
+    
+        var popup_1b951d4059ffab21e05102795dce3495 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_93b6539731f682383e0fe76569bdfa8c = $(`<div id="html_93b6539731f682383e0fe76569bdfa8c" style="width: 100.0%; height: 100.0%;">                     <div class="parking-popup">                         <h4>Troy Savings Bank Music Hall Parking Lot</h4>                         <div>Address: 42-48 2nd St, Troy, NY 12180, USA</div>                         <div>Hours: Not specified</div>                         <div>Type: public</div>                         <div class="parking-status" style="color: green">                             Status: Available (17.5% full)                         </div>                         <div style="margin-top: 5px;">                             <strong>Factors:</strong>                             <ul style="margin: 5px 0; padding-left: 20px;">                                 <li>Time Impact: 0.2x</li>                                 <li>Weather Impact: 1.2x</li>                                 <li>Event Impact: 1.0x</li>                             </ul>                         </div>                     </div>                 </div>`)[0];
+                popup_1b951d4059ffab21e05102795dce3495.setContent(html_93b6539731f682383e0fe76569bdfa8c);
+            
+        
+
+        circle_marker_87824deb842dd5ce7c196e008a687ac0.bindPopup(popup_1b951d4059ffab21e05102795dce3495)
+        ;
+
+        
+    
+    
+            circle_marker_87824deb842dd5ce7c196e008a687ac0.bindTooltip(
+                `<div>
+                     Troy Savings Bank Music Hall Parking Lot - Available
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_e2f1823210c8712a99089cc5e276cc07 = L.circleMarker(
+                [42.7400708, -73.67639009999999],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(map_7c9ac2c7370144b17bae543802603552);
+        
+    
+        var popup_70f222f6f3620d40f5e9d2513440c891 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a25ed612afe05aded6ee3f74c6dd2dc3 = $(`<div id="html_a25ed612afe05aded6ee3f74c6dd2dc3" style="width: 100.0%; height: 100.0%;">                     <div class="parking-popup">                         <h4>Parking lot</h4>                         <div>Address: 147 Hoosick St Suite K, Troy, NY 12180, USA</div>                         <div>Hours: Not specified</div>                         <div>Type: public</div>                         <div class="parking-status" style="color: green">                             Status: Available (16.8% full)                         </div>                         <div style="margin-top: 5px;">                             <strong>Factors:</strong>                             <ul style="margin: 5px 0; padding-left: 20px;">                                 <li>Time Impact: 0.2x</li>                                 <li>Weather Impact: 1.2x</li>                                 <li>Event Impact: 1.0x</li>                             </ul>                         </div>                     </div>                 </div>`)[0];
+                popup_70f222f6f3620d40f5e9d2513440c891.setContent(html_a25ed612afe05aded6ee3f74c6dd2dc3);
+            
+        
+
+        circle_marker_e2f1823210c8712a99089cc5e276cc07.bindPopup(popup_70f222f6f3620d40f5e9d2513440c891)
+        ;
+
+        
+    
+    
+            circle_marker_e2f1823210c8712a99089cc5e276cc07.bindTooltip(
+                `<div>
+                     Parking lot - Available
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_47e0ffe6ecb5d3c46a3e88dce8953e8d = L.circleMarker(
+                [42.7327248, -73.6912491],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(map_7c9ac2c7370144b17bae543802603552);
+        
+    
+        var popup_c2991f5964a32c5331c697a68e5a0929 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_13f0ea3129efb1c4c0152f296447ed47 = $(`<div id="html_13f0ea3129efb1c4c0152f296447ed47" style="width: 100.0%; height: 100.0%;">                     <div class="parking-popup">                         <h4>Front Street Parking Lot</h4>                         <div>Address: 299 Front St, Troy, NY 12180, USA</div>                         <div>Hours: Not specified</div>                         <div>Type: public</div>                         <div class="parking-status" style="color: green">                             Status: Available (17.8% full)                         </div>                         <div style="margin-top: 5px;">                             <strong>Factors:</strong>                             <ul style="margin: 5px 0; padding-left: 20px;">                                 <li>Time Impact: 0.2x</li>                                 <li>Weather Impact: 1.2x</li>                                 <li>Event Impact: 1.0x</li>                             </ul>                         </div>                     </div>                 </div>`)[0];
+                popup_c2991f5964a32c5331c697a68e5a0929.setContent(html_13f0ea3129efb1c4c0152f296447ed47);
+            
+        
+
+        circle_marker_47e0ffe6ecb5d3c46a3e88dce8953e8d.bindPopup(popup_c2991f5964a32c5331c697a68e5a0929)
+        ;
+
+        
+    
+    
+            circle_marker_47e0ffe6ecb5d3c46a3e88dce8953e8d.bindTooltip(
+                `<div>
+                     Front Street Parking Lot - Available
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_624e8230bf4271b563c8eb503d4f131e = L.circleMarker(
+                [42.7290522, -73.6763524],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(map_7c9ac2c7370144b17bae543802603552);
+        
+    
+        var popup_da83f2a86c7136b94cb194abf2212284 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_726cb8bd55b0aa2740904d9e313b952e = $(`<div id="html_726cb8bd55b0aa2740904d9e313b952e" style="width: 100.0%; height: 100.0%;">                     <div class="parking-popup">                         <h4>Visitor Parking</h4>                         <div>Address: Parking lot, Troy, NY 12180, USA</div>                         <div>Hours: Not specified</div>                         <div>Type: public</div>                         <div class="parking-status" style="color: green">                             Status: Available (12.0% full)                         </div>                         <div style="margin-top: 5px;">                             <strong>Factors:</strong>                             <ul style="margin: 5px 0; padding-left: 20px;">                                 <li>Time Impact: 0.2x</li>                                 <li>Weather Impact: 1.2x</li>                                 <li>Event Impact: 1.0x</li>                             </ul>                         </div>                     </div>                 </div>`)[0];
+                popup_da83f2a86c7136b94cb194abf2212284.setContent(html_726cb8bd55b0aa2740904d9e313b952e);
+            
+        
+
+        circle_marker_624e8230bf4271b563c8eb503d4f131e.bindPopup(popup_da83f2a86c7136b94cb194abf2212284)
+        ;
+
+        
+    
+    
+            circle_marker_624e8230bf4271b563c8eb503d4f131e.bindTooltip(
+                `<div>
+                     Visitor Parking - Available
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_6164cef8e7ad69571b123816bcde5e37 = L.circleMarker(
+                [42.7350019, -73.6880527],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(map_7c9ac2c7370144b17bae543802603552);
+        
+    
+        var popup_c3c0e52386ec1d5b7a83b00a1bd3e546 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_59191fa507bc31846efb899c74a3808e = $(`<div id="html_59191fa507bc31846efb899c74a3808e" style="width: 100.0%; height: 100.0%;">                     <div class="parking-popup">                         <h4>Green Island Parking Lot</h4>                         <div>Address: Troy, NY 12180, USA</div>                         <div>Hours: Not specified</div>                         <div>Type: public</div>                         <div class="parking-status" style="color: green">                             Status: Available (20.1% full)                         </div>                         <div style="margin-top: 5px;">                             <strong>Factors:</strong>                             <ul style="margin: 5px 0; padding-left: 20px;">                                 <li>Time Impact: 0.2x</li>                                 <li>Weather Impact: 1.2x</li>                                 <li>Event Impact: 1.0x</li>                             </ul>                         </div>                     </div>                 </div>`)[0];
+                popup_c3c0e52386ec1d5b7a83b00a1bd3e546.setContent(html_59191fa507bc31846efb899c74a3808e);
+            
+        
+
+        circle_marker_6164cef8e7ad69571b123816bcde5e37.bindPopup(popup_c3c0e52386ec1d5b7a83b00a1bd3e546)
+        ;
+
+        
+    
+    
+            circle_marker_6164cef8e7ad69571b123816bcde5e37.bindTooltip(
+                `<div>
+                     Green Island Parking Lot - Available
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_65047894eff8111663391045dd6e1622 = L.circleMarker(
+                [42.7282559, -73.6752822],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(map_7c9ac2c7370144b17bae543802603552);
+        
+    
+        var popup_f2707c69313f9530388b2cb36b3ca2df = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_bf64d25489e4921811ccbcfd97c5e404 = $(`<div id="html_bf64d25489e4921811ccbcfd97c5e404" style="width: 100.0%; height: 100.0%;">                     <div class="parking-popup">                         <h4>Commons West Lot</h4>                         <div>Address: Troy, NY 12180, USA</div>                         <div>Hours: Not specified</div>                         <div>Type: public</div>                         <div class="parking-status" style="color: green">                             Status: Available (18.2% full)                         </div>                         <div style="margin-top: 5px;">                             <strong>Factors:</strong>                             <ul style="margin: 5px 0; padding-left: 20px;">                                 <li>Time Impact: 0.2x</li>                                 <li>Weather Impact: 1.2x</li>                                 <li>Event Impact: 1.0x</li>                             </ul>                         </div>                     </div>                 </div>`)[0];
+                popup_f2707c69313f9530388b2cb36b3ca2df.setContent(html_bf64d25489e4921811ccbcfd97c5e404);
+            
+        
+
+        circle_marker_65047894eff8111663391045dd6e1622.bindPopup(popup_f2707c69313f9530388b2cb36b3ca2df)
+        ;
+
+        
+    
+    
+            circle_marker_65047894eff8111663391045dd6e1622.bindTooltip(
+                `<div>
+                     Commons West Lot - Available
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_d3a4c6dbc9857bfb81b46eeae30de08d = L.circleMarker(
+                [42.7272373, -73.6792205],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(map_7c9ac2c7370144b17bae543802603552);
+        
+    
+        var popup_ce88cc452e18bf82f84dca958defbbe2 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_42cd6c4fbff62f8307e452f5428b7410 = $(`<div id="html_42cd6c4fbff62f8307e452f5428b7410" style="width: 100.0%; height: 100.0%;">                     <div class="parking-popup">                         <h4>Academy Hall Lot</h4>                         <div>Address: 117 College Ave, Troy, NY 12180, USA</div>                         <div>Hours: Not specified</div>                         <div>Type: public</div>                         <div class="parking-status" style="color: green">                             Status: Available (17.4% full)                         </div>                         <div style="margin-top: 5px;">                             <strong>Factors:</strong>                             <ul style="margin: 5px 0; padding-left: 20px;">                                 <li>Time Impact: 0.2x</li>                                 <li>Weather Impact: 1.2x</li>                                 <li>Event Impact: 1.0x</li>                             </ul>                         </div>                     </div>                 </div>`)[0];
+                popup_ce88cc452e18bf82f84dca958defbbe2.setContent(html_42cd6c4fbff62f8307e452f5428b7410);
+            
+        
+
+        circle_marker_d3a4c6dbc9857bfb81b46eeae30de08d.bindPopup(popup_ce88cc452e18bf82f84dca958defbbe2)
+        ;
+
+        
+    
+    
+            circle_marker_d3a4c6dbc9857bfb81b46eeae30de08d.bindTooltip(
+                `<div>
+                     Academy Hall Lot - Available
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_c0b9c0d55d699ab51a8e0dba6d69bdae = L.circleMarker(
+                [42.7328622, -73.67024479999999],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(map_7c9ac2c7370144b17bae543802603552);
+        
+    
+        var popup_53540afe2db5c977980338199e518105 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_37af356723f5dc26b3fb0f8b063a0aeb = $(`<div id="html_37af356723f5dc26b3fb0f8b063a0aeb" style="width: 100.0%; height: 100.0%;">                     <div class="parking-popup">                         <h4>RPI Parking and Transportation</h4>                         <div>Address: Peoples Dr, Troy, NY 12180, USA</div>                         <div>Hours: Not specified</div>                         <div>Type: public</div>                         <div class="parking-status" style="color: green">                             Status: Available (20.6% full)                         </div>                         <div style="margin-top: 5px;">                             <strong>Factors:</strong>                             <ul style="margin: 5px 0; padding-left: 20px;">                                 <li>Time Impact: 0.2x</li>                                 <li>Weather Impact: 1.2x</li>                                 <li>Event Impact: 1.0x</li>                             </ul>                         </div>                     </div>                 </div>`)[0];
+                popup_53540afe2db5c977980338199e518105.setContent(html_37af356723f5dc26b3fb0f8b063a0aeb);
+            
+        
+
+        circle_marker_c0b9c0d55d699ab51a8e0dba6d69bdae.bindPopup(popup_53540afe2db5c977980338199e518105)
+        ;
+
+        
+    
+    
+            circle_marker_c0b9c0d55d699ab51a8e0dba6d69bdae.bindTooltip(
+                `<div>
+                     RPI Parking and Transportation - Available
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_5a3578f0f8a44516fe3cfd2f4e97aad9 = L.circleMarker(
+                [42.727798, -73.682065],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(map_7c9ac2c7370144b17bae543802603552);
+        
+    
+        var popup_4240cfba1f640f1466a7afb10c7b2d14 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_cef80175427ca16e29bec1af733b568b = $(`<div id="html_cef80175427ca16e29bec1af733b568b" style="width: 100.0%; height: 100.0%;">                     <div class="parking-popup">                         <h4>College Avenue Parking Garage</h4>                         <div>Address: 59 College Ave, Troy, NY 12180, USA</div>                         <div>Hours: Not specified</div>                         <div>Type: public</div>                         <div class="parking-status" style="color: green">                             Status: Available (19.1% full)                         </div>                         <div style="margin-top: 5px;">                             <strong>Factors:</strong>                             <ul style="margin: 5px 0; padding-left: 20px;">                                 <li>Time Impact: 0.2x</li>                                 <li>Weather Impact: 1.2x</li>                                 <li>Event Impact: 1.0x</li>                             </ul>                         </div>                     </div>                 </div>`)[0];
+                popup_4240cfba1f640f1466a7afb10c7b2d14.setContent(html_cef80175427ca16e29bec1af733b568b);
+            
+        
+
+        circle_marker_5a3578f0f8a44516fe3cfd2f4e97aad9.bindPopup(popup_4240cfba1f640f1466a7afb10c7b2d14)
+        ;
+
+        
+    
+    
+            circle_marker_5a3578f0f8a44516fe3cfd2f4e97aad9.bindTooltip(
+                `<div>
+                     College Avenue Parking Garage - Available
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_ce2c2d251e825d2f3c1cca5b5389aaa1 = L.circleMarker(
+                [42.7262522, -73.6916588],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(map_7c9ac2c7370144b17bae543802603552);
+        
+    
+        var popup_4f20f80ce122b9a899a1dae6936564cc = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_63af88db51d017f8990c722d6fba822c = $(`<div id="html_63af88db51d017f8990c722d6fba822c" style="width: 100.0%; height: 100.0%;">                     <div class="parking-popup">                         <h4>Russell sage college: All College Parking</h4>                         <div>Address: 3rd St &, Division St, Troy, NY 12180, USA</div>                         <div>Hours: Not specified</div>                         <div>Type: public</div>                         <div class="parking-status" style="color: green">                             Status: Available (18.2% full)                         </div>                         <div style="margin-top: 5px;">                             <strong>Factors:</strong>                             <ul style="margin: 5px 0; padding-left: 20px;">                                 <li>Time Impact: 0.2x</li>                                 <li>Weather Impact: 1.2x</li>                                 <li>Event Impact: 1.0x</li>                             </ul>                         </div>                     </div>                 </div>`)[0];
+                popup_4f20f80ce122b9a899a1dae6936564cc.setContent(html_63af88db51d017f8990c722d6fba822c);
+            
+        
+
+        circle_marker_ce2c2d251e825d2f3c1cca5b5389aaa1.bindPopup(popup_4f20f80ce122b9a899a1dae6936564cc)
+        ;
+
+        
+    
+    
+            circle_marker_ce2c2d251e825d2f3c1cca5b5389aaa1.bindTooltip(
+                `<div>
+                     Russell sage college: All College Parking - Available
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_b7aa3387a94924d1b306b402fe420d8e = L.circleMarker(
+                [42.72852, -73.68809],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(map_7c9ac2c7370144b17bae543802603552);
+        
+    
+        var popup_d36b5da894007d61117490a0d22ffc4c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1a262f56653d78484389f480ec4dd789 = $(`<div id="html_1a262f56653d78484389f480ec4dd789" style="width: 100.0%; height: 100.0%;">                     <div class="parking-popup">                         <h4>Congress St & 5th St</h4>                         <div>Address: Troy, NY 12180, USA</div>                         <div>Hours: Not specified</div>                         <div>Type: public</div>                         <div class="parking-status" style="color: green">                             Status: Available (16.5% full)                         </div>                         <div style="margin-top: 5px;">                             <strong>Factors:</strong>                             <ul style="margin: 5px 0; padding-left: 20px;">                                 <li>Time Impact: 0.2x</li>                                 <li>Weather Impact: 1.2x</li>                                 <li>Event Impact: 1.0x</li>                             </ul>                         </div>                     </div>                 </div>`)[0];
+                popup_d36b5da894007d61117490a0d22ffc4c.setContent(html_1a262f56653d78484389f480ec4dd789);
+            
+        
+
+        circle_marker_b7aa3387a94924d1b306b402fe420d8e.bindPopup(popup_d36b5da894007d61117490a0d22ffc4c)
+        ;
+
+        
+    
+    
+            circle_marker_b7aa3387a94924d1b306b402fe420d8e.bindTooltip(
+                `<div>
+                     Congress St & 5th St - Available
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_b07b34fd3f742d19f6309fc997f89165 = L.circleMarker(
+                [42.734207, -73.687057],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2}
+            ).addTo(map_7c9ac2c7370144b17bae543802603552);
+        
+    
+        var popup_027d46e406659f7a0a665a27c76225e3 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6aad2e29ae36b4a642c9958d8ad66db4 = $(`<div id="html_6aad2e29ae36b4a642c9958d8ad66db4" style="width: 100.0%; height: 100.0%;">                     <div class="parking-popup">                         <h4>Federal St & 5th Ave</h4>                         <div>Address: Troy, NY 12180, USA</div>                         <div>Hours: Not specified</div>                         <div>Type: public</div>                         <div class="parking-status" style="color: green">                             Status: Available (12.9% full)                         </div>                         <div style="margin-top: 5px;">                             <strong>Factors:</strong>                             <ul style="margin: 5px 0; padding-left: 20px;">                                 <li>Time Impact: 0.2x</li>                                 <li>Weather Impact: 1.2x</li>                                 <li>Event Impact: 1.0x</li>                             </ul>                         </div>                     </div>                 </div>`)[0];
+                popup_027d46e406659f7a0a665a27c76225e3.setContent(html_6aad2e29ae36b4a642c9958d8ad66db4);
+            
+        
+
+        circle_marker_b07b34fd3f742d19f6309fc997f89165.bindPopup(popup_027d46e406659f7a0a665a27c76225e3)
+        ;
+
+        
+    
+    
+            circle_marker_b07b34fd3f742d19f6309fc997f89165.bindTooltip(
+                `<div>
+                     Federal St & 5th Ave - Available
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
+</html>

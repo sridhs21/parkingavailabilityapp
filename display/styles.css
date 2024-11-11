@@ -1,0 +1,31 @@
+#map {
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+.status-indicator {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+.updating {
+    color: green;
+}
+.legend {
+    position: fixed; 
+    bottom: 50px; 
+    right: 50px; 
+    width: 150px;
+    background-color: white; 
+    padding: 10px; 
+    border-radius: 5px;
+    z-index: 1000; 
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
