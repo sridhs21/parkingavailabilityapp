@@ -275,15 +275,9 @@ class ParkingPredictor:
 
     # Add these new helper methods
     def get_special_day_factor(self, timestamp: datetime) -> float:
-        """Determine if the given date is a special day"""
-        # You would need to implement logic to check against a calendar of special days
-        # For now, return 1.0 as default
         return 1.0
 
     def get_distance_factor(self, location: ParkingLocation) -> float:
-        """Calculate distance factor based on location"""
-        # You would need to implement logic to determine if the location is central/peripheral/remote
-        # For now, return central as default
         return self.distance_factors['central']
 
     def get_nearby_events(self, gmaps_client: googlemaps.Client, 
@@ -449,73 +443,4 @@ class ParkingPredictor:
         return {
             'factor': adjusted_factor,
             'description': period_name
-        }
-
-    def predict_occupancy(self, location: ParkingLocation, 
-                         gmaps_client: googlemaps.Client,
-                         lot_type: str = 'public',
-                         timestamp: Optional[datetime] = None,
-                         weather_api_key: Optional[str] = None) -> Dict:
-        """
-        Predict parking lot occupancy based on multiple factors
-        """
-        if timestamp is None:
-            timestamp = datetime.now()
-
-        # Get base characteristics
-        lot_info = self.lot_characteristics.get(lot_type, self.lot_characteristics['public'])
-        base_occupancy = lot_info['base_capacity']
-
-        # Get time impact
-        time_impact = self.get_time_factor(timestamp, lot_type)
-        
-        # Get weather impact
-        weather_impact = self.get_weather_impact(
-            location.latitude, 
-            location.longitude,
-            weather_api_key
-        )
-        weather_factor = 1 + ((weather_impact['factor'] - 1) * lot_info['weather_sensitivity'])
-
-        # Get nearby events impact
-        events = self.get_nearby_events(
-            gmaps_client,
-            location.latitude,
-            location.longitude
-        )
-        event_impact = self.calculate_event_impact(location, events, timestamp)
-        event_factor = 1 + ((event_impact['factor'] - 1) * lot_info['event_sensitivity'])
-
-        # Calculate final occupancy
-        occupancy = base_occupancy * time_impact['factor'] * weather_factor * event_factor
-
-        # Add small random variation
-        occupancy += np.random.normal(0, 0.03)
-        occupancy = max(0.0, min(1.0, occupancy))
-
-        # Determine status and color
-        if occupancy >= 0.8:
-            status = "Full"
-            color = "red"
-        elif occupancy >= 0.4:
-            status = "Moderate"
-            color = "yellow"
-        else:
-            status = "Available"
-            color = "green"
-
-        return {
-            "status": status,
-            "color": color,
-            "occupancy": round(occupancy * 100, 1),
-            "factors": {
-                "time_impact": round(time_impact['factor'], 2),
-                "weather_impact": round(weather_factor, 2),
-                "event_impact": round(event_factor, 2)
-            },
-            "details": {
-                "time": time_impact['description'],
-                "weather": weather_impact['description'],
-                "significant_venues": event_impact['venues']
-            }
         }
