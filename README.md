@@ -1,6 +1,6 @@
 # Parking Availability Prediction App
 
-A parking availability prediction system that provides intelligent insights into parking occupancy using machine learning, location data, and environmental factors.
+A parking availability prediction system that provides insights into parking occupancy using numerical processing, location data, and environmental factors.
 
 ## Features
 
